@@ -30,8 +30,9 @@ def main():
             elif key == user_answer and not value:
                 print("Maybe, you're not the fan I thought you were... try again.")
             else:
-
-                  continue
+                 
+                 continue
+         
 
     question2= {"question": "What is the name of the villain also known as \"yellow eyes\"?",
  "Crowley": False,
