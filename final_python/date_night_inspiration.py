@@ -16,29 +16,29 @@ import os
 import random
 import requests
 import datetime
+from pprint import pprint
 
 api_key = os.environ.get("YELP_API")
 
-def parameters(location, term, radius, culture, diet, price, api_key):
-    # API endpoint
-    endpoint = "https://api.yelp.com/v3/businesses/search"
-    
-    # API request URL
-    url = endpoint + "?location=" + location + "&term=" + term + "&radius=" + radius + "&categories=" + culture + "&categories2=" + diet + "&price=" + price + "&open_now=true&attributes=&sort_by=best_match&limit=20"
+def parameters(location, term, api_key): # diet, price
+    print(location, term)
 
-    # ASK & DELETE
-    headers = {
-    "Authorization": f"Bearer {api_key}"
-    }    
-    ### Unix time to check for a different date instead of "open now"
+    headers = {'Authorization': f'Bearer {api_key}'}
 
-    # API request and handle the response
-    response = requests.get(url)
+    url='https://api.yelp.com/v3/businesses/search'
+
+    # In the dictionary, term can take values like food, cafes or businesses like McDonalds
+    params = {'term': term,'location':location, 'limit': 5} #, 'radius': radius}
+
+    response=requests.get(url, params=params, headers=headers)
+
     if response.status_code == 200:
         data = response.json()
-    
-        # Print response
-        print(data)
+
+        for x in data["businesses"]:
+            print(x["name"])
+            print(x["url"])
+            print()
 
     else:
         print(f'Hmmmm... I can\'t seem to find anything that fits those exact responses. Would you like to try again?')
@@ -47,14 +47,14 @@ def parameters(location, term, radius, culture, diet, price, api_key):
 # Main function to run the code
 def main():
 
-    # ??? DO I NEED A TRY/EXCEPT FUNCTION FOR EACH QUESTION TO ENSURE NO OTHER INPUT IS ACCEPTED -- TO BE REPLACED WITH QUESTIONS--OPTIONS WILL BE GIVEN INSTEAD OF MULTIPLE CHOICE--
-    location = input("location:")
-    term = input("term: ")
-    radius = input("radius: ")
-    culture = input("culture: ")
-    diet = input("diet: ")
-    price = input("price: ")
-    # date = input("date: ")
-    parameters(location, term, radius, culture, diet, price, api_key)
+    # Input for API search
+    location = input("location:") or "New York City"
+    term = input("term: ") or "seafood"
+    radius = input("radius: ") or 50
+    #culture = input("culture: ") or "indian"
+    #diet = input("diet: ") or ""
+    #price = input("price: ") or ""
+    # date = input("date: ") or ""
+    parameters(location, term, api_key) # diet, price
 
 main()
